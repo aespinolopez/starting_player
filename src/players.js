@@ -3,15 +3,15 @@ import colors from "./Colors";
 
 const TIME = 3000;
 
-function players() {
+function playersFactory() {
   const players = {};
   let timeout = 0;
 
   addTouchableInterface();
+  addMouseInterface();
 
   function register(id, circle) {
     players[id] = circle;
-    circle.draw();
     startCountDown();
   }
 
@@ -48,29 +48,28 @@ function players() {
 
   function addTouchableInterface() {
     window.addEventListener("touchstart", (e) => {
-      Array.from(e.changedTouches).forEach((touch) => {
-        const circle = new Circle(touch.pageX, touch.pageY, colors.pick());
-        register(touch.identifier, circle);
-      });
+      createCircle(Array.from(e.changedTouches));
     });
     window.addEventListener("touchend", (e) => {
-      Array.from(e.changedTouches).forEach((touch) => {
-        const circle = unregister(touch.identifier);
-        colors.remove(circle.color);
-      });
+      deleteCircle(Array.from(e.changedTouches));
     });
     window.addEventListener("touchmove", (e) => {
-      Array.from(e.changedTouches).forEach((touch) => {
-        const circle = getCircleFromPlayer(touch.identifier);
-        circle.x = touch.pageX;
-        circle.y = touch.pageY;
-      });
+      moveCircle(Array.from(e.changedTouches));
     });
     window.addEventListener("touchcancel", (e) => {
-      Array.from(e.changedTouches).forEach((touch) => {
-        const circle = unregister(touch.identifier);
-        colors.remove(circle.color);
-      });
+      deleteCircle(Array.from(e.changedTouches));
+    });
+  }
+
+  function addMouseInterface() {
+    window.addEventListener("mousedown", (e) => {
+      createCircle(createTouchesFromMouseEvent(e));
+    });
+    window.addEventListener("mouseup", (e) => {
+      deleteCircle(createTouchesFromMouseEvent(e));
+    });
+    window.addEventListener("mousemove", (e) => {
+      moveCircle(createTouchesFromMouseEvent(e));
     });
   }
 
@@ -81,4 +80,40 @@ function players() {
   };
 }
 
-export default players();
+const players = playersFactory();
+
+function createTouchesFromMouseEvent(e) {
+  return [
+    {
+      identifier: "mouse",
+      pageX: e.pageX,
+      pageY: e.pageY,
+    },
+  ];
+}
+
+function createCircle(touches) {
+  touches.forEach((touch) => {
+    const circle = new Circle(touch.pageX, touch.pageY, colors.pick());
+    players.register(touch.identifier, circle);
+  });
+}
+
+function moveCircle(touches) {
+  touches.forEach((touch) => {
+    const circle = players.getCircleFromPlayer(touch.identifier);
+    if (circle) {
+      circle.x = touch.pageX;
+      circle.y = touch.pageY;
+    }
+  });
+}
+
+function deleteCircle(touches) {
+  touches.forEach((touch) => {
+    const circle = players.unregister(touch.identifier);
+    colors.remove(circle.color);
+  });
+}
+
+export default players;

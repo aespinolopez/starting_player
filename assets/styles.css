@@ -1,15 +1,75 @@
-body {
+html, body {
+    margin: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
     background-color: darkgray;
 }
 
 .circle {
-    width: 120px;
-    height: 120px;
-    border-radius: 100%;
+    width: 130px;
+    height: 130px;
 
     position: absolute;
-    transform: translate(-50%, -50%);
+    animation: rotation 2s linear 0s infinite;
+}
+
+.green path {
+    fill: green;
+}
+
+.red path {
+    fill: red;
+}
+
+.blue path {
+    fill: blue;
+}
+
+.purple path {
+    fill: purple;
+}
+
+.pink path {
+    fill: pink;
+}
+
+.black path {
+    fill: black;
+}
+
+.lightgray path {
+    fill: lightgray;
+}
+
+@keyframes rotation {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg)
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(-360deg)
+    }
+}
+
+
+.app-explanation {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+}
+
+.app-explanation-image {
+    width: 100%;
+}
+
+.app-explanation-description {
+    position: absolute;
+    width: 150px;
+    top: 50%;
+    transform: translateY(-30%);
 }

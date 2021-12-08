@@ -13,11 +13,16 @@ module.exports = {
         test: /\.css$/i,
         use: ["style-loader", "css-loader", "postcss-loader"],
       },
+      {
+        test: /\.(html|svg)$/i,
+        loader: "html-loader",
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./index.html",
+      title: "Starting Player",
     }),
   ],
   devServer: {
