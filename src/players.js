@@ -34,9 +34,11 @@ function playersFactory() {
 
   function choseWinner() {
     const playerIds = Object.keys(players);
-    const winner = Math.round(Math.random() * playerIds.length);
+    const winner = Math.floor(Math.random() * playerIds.length);
     Object.entries(players)
-      .filter(([player]) => player !== playerIds[winner])
+      .filter(([player]) => {
+        return Number(player) !== winner;
+      })
       .forEach(([player, circle]) => {
         circle.looser();
       });
