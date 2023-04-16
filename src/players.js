@@ -34,10 +34,12 @@ function playersFactory() {
 
   function choseWinner() {
     const playerIds = Object.keys(players);
-    const winner = Math.floor(Math.random() * playerIds.length);
+    const winnerIndex = Math.floor(Math.random() * playerIds.length);
+    const winner = playerIds[winnerIndex];
+
     Object.entries(players)
       .filter(([player]) => {
-        return Number(player) !== winner;
+        return String(player) !== String(winner);
       })
       .forEach(([player, circle]) => {
         circle.looser();
@@ -50,27 +52,34 @@ function playersFactory() {
 
   function addTouchableInterface() {
     window.addEventListener("touchstart", (e) => {
+      e.preventDefault();
       createCircle(Array.from(e.changedTouches));
     });
     window.addEventListener("touchend", (e) => {
+      e.preventDefault();
       deleteCircle(Array.from(e.changedTouches));
     });
     window.addEventListener("touchmove", (e) => {
+      e.preventDefault();
       moveCircle(Array.from(e.changedTouches));
     });
     window.addEventListener("touchcancel", (e) => {
+      e.preventDefault();
       deleteCircle(Array.from(e.changedTouches));
     });
   }
 
   function addMouseInterface() {
     window.addEventListener("mousedown", (e) => {
+      e.preventDefault();
       createCircle(createTouchesFromMouseEvent(e));
     });
     window.addEventListener("mouseup", (e) => {
+      e.preventDefault();
       deleteCircle(createTouchesFromMouseEvent(e));
     });
     window.addEventListener("mousemove", (e) => {
+      e.preventDefault();
       moveCircle(createTouchesFromMouseEvent(e));
     });
   }
